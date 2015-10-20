@@ -1,0 +1,9 @@
+language: node_js
+node_js:
+  - "4.0"
+
+install:
+  - npm install
+
+script:
+  - NODE_ENV=production npm run deploy

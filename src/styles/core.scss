@@ -1,0 +1,18 @@
+@import 'base';
+@import 'vendor/normalize';
+
+#editor {
+	position: absolute;
+	width: 100% !important;
+	height: 100% !important;
+}
+
+#save-button {
+	position: absolute;
+	right: 20px;
+	bottom: 20px;
+}
+
+#save-button.disabled {
+	opacity: 0.5
+}
