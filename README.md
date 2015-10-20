@@ -2,7 +2,7 @@
 
 ## Example
 
-http://ipfsbin.xyz/#Qmb3yiXHZaTN89cxC8pSs32kkaHiHpEWtopmuYyoD4Pbme
+http://ipfsbin.xyz/#QmXdMvJaRrSTCAcDFMZLUFfm9uGK6Wq7qEVcwbvaQRxq8x
 
 ### Install
 
