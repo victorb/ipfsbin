@@ -14,20 +14,22 @@ app.use(express.static('dist'));
 
 app.post('/paste', function (req, res) {
 	const text = req.body.text
-	console.log('adding paste')
 	ipfs.add(new Buffer(text), function(err, response) {
 		if(err) {
 			console.error(err)
 			res.sendStatus(500)
 			return
 		}
-		res.send({hash: response[0].Hash})
+		const hash = response[0].Hash
+		console.log('added paste ' + hash)
+		res.send({hash: hash})
 	})
 });
 
 app.get('/paste/:id', function (req, res) {
-	console.log('getting paste')
-	ipfs.cat(req.params.id, function(err, stream) {
+	const id = req.params.id
+	console.log('getting paste ' + id)
+	ipfs.cat(id, function(err, stream) {
 		if(err) {
 			console.error(err)
 			res.sendStatus(404)
