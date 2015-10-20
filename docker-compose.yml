@@ -1,0 +1,27 @@
+web:
+  build: .
+  working_dir: /usr/src/app
+  command: ./wait_to_start
+  volumes:
+    - .:/usr/src/app
+  ports:
+   - "3000:3000"
+  links:
+   - ipfs
+  environment:
+    - WAIT_COMMAND=[ $(curl --write-out %{http_code} --silent --output /dev/null http://ipfs:5001/api/v0/id) = 200 ]
+    - WAIT_START_CMD=npm start
+    - WAIT_SLEEP=2
+    - WAIT_LOOPS=10
+npm:
+  image: node:4.2.1
+  working_dir: /usr/src/app/
+  volumes:
+    - .:/usr/src/app/
+  entrypoint: npm
+ipfs:
+  build: ./ipfs
+  ports:
+   - "4001:4001"
+   - "5001:5001"
+   - "8080:8080"

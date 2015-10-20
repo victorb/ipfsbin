@@ -1,10 +1,9 @@
 var express = require('express');
 var bodyParser = require('body-parser')
 var ipfsApi = require('ipfs-api')
-var ipfsd = require('ipfsd-ctl')
 var cors = require('cors')
 
-var ipfs
+var ipfs = ipfsApi('ipfs', '5001')
 
 var app = express();
 
@@ -45,22 +44,10 @@ app.get('/paste/:id', function (req, res) {
 	})
 });
 
-ipfsd.disposable(function (err, node) {
-	if (err) throw err
-	console.log('ipfs init done')
 
-	node.startDaemon(function (err, ignore) {
-		if (err) throw err
-		console.log('ipfs daemon running')
+var server = app.listen(3000, function () {
+	var host = server.address().address;
+	var port = server.address().port;
 
-		ipfs = ipfsApi(node.apiAddr)
-
-		var server = app.listen(3000, function () {
-			var host = server.address().address;
-			var port = server.address().port;
-
-			console.log('Example app listening at http://%s:%s', host, port);
-		});
-	})
-})
-
+	console.log('Example app listening at http://%s:%s', host, port);
+});

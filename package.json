@@ -28,7 +28,6 @@
     "express": "^4.13.3",
     "history": "^1.9.0",
     "ipfs-api": "^2.4.1",
-    "ipfsd-ctl": "^0.5.4",
     "react": "^0.14.0",
     "react-ace": "^2.6.0",
     "react-dom": "^0.14.0",
