@@ -1,18 +1,30 @@
 @import 'base';
 @import 'vendor/normalize';
+@import 'codemirror';
+@import 'base16-dark';
 
-#editor {
+.CodeMirror {
 	position: absolute;
 	width: 100% !important;
 	height: 100% !important;
 }
 
 #save-button {
+	z-index: 1000000;
 	position: absolute;
 	right: 20px;
+	width: 70px;
+	text-align: center;
 	bottom: 20px;
 }
 
 #save-button.disabled {
 	opacity: 0.5
+}
+
+#select {
+	z-index: 1000000;
+	position: absolute;
+	right: 100px;
+	bottom: 20px;
 }

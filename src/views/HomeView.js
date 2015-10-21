@@ -2,10 +2,24 @@ import React                  from 'react';
 import { bindActionCreators } from 'redux';
 import { connect }            from 'react-redux';
 
-var AceEditor = require('react-ace');
+import Codemirror from 'react-codemirror'
 
-var javascript = require('brace/mode/javascript')
-var monokai = require('brace/theme/monokai')
+require('css!codemirror/lib/codemirror.css');
+//require('codemirror/mode/javascript/javascript.js');
+
+import modes from '../utils/modes'
+
+modes.map((mode) => {
+	const name = mode.mode
+	if(name !== "null") {
+		require('codemirror/mode/'+name+'/'+name+'.js');
+	}
+})
+
+//var AceEditor = require('react-ace');
+//
+//var javascript = require('brace/mode/javascript')
+//var monokai = require('brace/theme/monokai')
 
 // Normally you'd import your action creators, but I don't want to create
 // a file that you're just going to delete anyways!
@@ -24,6 +38,29 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   actions : bindActionCreators(actionCreators, dispatch)
 });
+
+class Select extends React.Component {
+	constructor(props) {
+		super(props)
+		this.state = {
+			mode: null
+		}
+	}
+	handleChange(ev) {
+		this.props.onChange(ev.target.value)
+		this.setState({mode: ev.target.value})
+	}
+	render() {
+		let count = 0;
+		const options = modes.map((mode) => {
+			count++
+			return <option key={count} value={mode.mode}>{mode.name}</option>
+		})
+		const mode = this.state.mode || this.props.mode
+		return <div id="select"><select onChange={this.handleChange.bind(this) } value={mode}>{options}</select></div>
+	}
+}
+
 export class HomeView extends React.Component {
   static propTypes = {
     actions  : React.PropTypes.object,
@@ -33,7 +70,8 @@ export class HomeView extends React.Component {
   constructor () {
     super();
 		this.state = {
-			text: null
+			text: '',
+			mode: 'javascript'
 		}
 		if(window.location.hash !== '') {
 			this.state.hash = window.location.hash.substr(1, window.location.hash.length)
@@ -46,13 +84,13 @@ export class HomeView extends React.Component {
 	}
 
 	onSave() {
-		fetch('/paste', {
+		fetch('http://localhost:3001/paste', {
 			method: 'POST',
 			headers: {
 				'Accept': 'application/json',
 				'Content-Type': 'application/json'
 			},
-			body: JSON.stringify({text: this.state.text}),
+			body: JSON.stringify({text: this.state.text, mode: this.state.mode}),
 		}).then((res) => {
 			if(res.status !== 201 && res.status !== 200) {
 				alert('Something went wrong with creating your paste')
@@ -64,53 +102,64 @@ export class HomeView extends React.Component {
 		})
 	}
 
-	componentDidMount() {
-		if(this.state.hash) {
-			console.log('hash')
-			fetch('/paste/' + this.state.hash)
-				.then((res) => {
-					if(res.status === 404) {
-						alert("Couldn't find this paste, resetting")
-						window.location.hash = ""
-					}
-					return res.json()
-				}).then((res) => {
-					this.setState({text: res.text, last_saved_text: res.text})
-				}).catch((error) => {
-					console.log(error)
-				})
-		}
-		this.refs.editor.commands.bindKeys({"ctrl-l":null, "left":null})  // or
-		this.refs.editor.commands.bindKey("tab", null) // or
-		this.refs.editor.commands.removeCommands(["gotoline", "find"])
+	fetchAndSetText(hash) {
+		fetch('http://localhost:3001/paste/' + hash)
+			.then((res) => {
+				if(res.status === 404) {
+					alert("Couldn't find this paste, resetting")
+					window.location.hash = ""
+				}
+				return res.json()
+			}).then((res) => {
+				this.setState({text: res.text, last_saved_text: res.text, mode: res.mode})
+			}).catch((error) => {
+				console.log(error)
+			})
 	}
 
+	componentDidMount() {
+		if(this.state.hash) {
+			this.fetchAndSetText(this.state.hash)
+		}
+
+		window.onhashchange = () => {
+			const hash = window.location.hash.substr(1, window.location.hash.length)
+			this.fetchAndSetText(hash)
+		}
+	}
+
+	handleLanguageChange(mode) {
+		this.setState({mode: mode})
+	}
 
   render () {
-		const editorStyle = {
-			width: '100%'
-		}
 		let button_classname = ""
 		let disabled = false
 		if(this.state.last_saved_text === this.state.text) {
 			button_classname = "disabled"
 			disabled = true
 		}
-		console.log(button_classname)
+		const options = {
+			lineNumbers: true,
+			theme: 'base16-dark',
+			mode: this.state.mode
+		}
+				//<AceEditor
+				//	style={editorStyle}
+				//	mode="javascript"
+				//	theme="monokai"
+				//	name="editor"
+				//	height="6em"
+				//	onChange={this.onChange.bind(this)}
+				//	value={this.state.text}
+				//	ref='editor'
+				//	editorProps={{}}javascript
+				///>
     return (
       <div>
-				<AceEditor
-					style={editorStyle}
-					mode="javascript"
-					theme="monokai"
-					name="editor"
-					height="6em"
-					onChange={this.onChange.bind(this)}
-					value={this.state.text}
-					ref='editor'
-					editorProps={{}}
-				/>
+				<Codemirror value={this.state.text} onChange={this.onChange.bind(this)} options={options}/>
 				<button id="save-button" disabled={disabled} className={button_classname} onClick={this.onSave.bind(this)}>Save</button> 
+				<Select onChange={this.handleLanguageChange.bind(this)} mode={this.state.mode}/>
       </div>
     );
   }

@@ -12,8 +12,8 @@ app.use(cors());
 app.use(express.static('dist'));
 
 app.post('/paste', function (req, res) {
-	const text = req.body.text
-	ipfs.add(new Buffer(text), function(err, response) {
+	const body = JSON.stringify(req.body)
+	ipfs.add(new Buffer(body), function(err, response) {
 		if(err) {
 			console.error(err)
 			res.sendStatus(500)
@@ -39,13 +39,13 @@ app.get('/paste/:id', function (req, res) {
 			.on('error', function (err) { throw err })
 			.on('data', function (data) { buf += data })
 			.on('end', function () {
-				res.send({text: buf.toString()});
+				res.send(buf.toString());
 			})
 	})
 });
 
 
-var server = app.listen(3000, function () {
+var server = app.listen(3001, function () {
 	var host = server.address().address;
 	var port = server.address().port;
 
