@@ -80,6 +80,9 @@ export class HomeView extends React.Component {
 					console.log(error)
 				})
 		}
+		this.refs.editor.commands.bindKeys({"ctrl-l":null, "left":null})  // or
+		this.refs.editor.commands.bindKey("tab", null) // or
+		this.refs.editor.commands.removeCommands(["gotoline", "find"])
 	}
 
 
@@ -104,6 +107,8 @@ export class HomeView extends React.Component {
 					height="6em"
 					onChange={this.onChange.bind(this)}
 					value={this.state.text}
+					ref='editor'
+					editorProps={{}}
 				/>
 				<button id="save-button" disabled={disabled} className={button_classname} onClick={this.onSave.bind(this)}>Save</button> 
       </div>
