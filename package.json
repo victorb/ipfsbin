@@ -63,7 +63,7 @@
     "node-sass": "^3.3.3",
     "phantomjs": "^1.9.17",
     "phantomjs-polyfill": "0.0.1",
-    "react-addons-test-utils": "^0.14.0",
+    "react-addons-test-utils": "^0.14.1",
     "react-transform-catch-errors": "^0.1.2",
     "react-transform-hmr": "^1.0.0",
     "redbox-react": "^1.0.4",
