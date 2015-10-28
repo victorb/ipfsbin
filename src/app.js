@@ -31,6 +31,9 @@ modes.map((mode) => {
 })
 
 
+if(window.location.hash === '') {
+  window.location.hash = 'QmZUKqaJMk9VkxdVBDyymNFB9qWhxHwpXRe3ce4PnQ8yXK'
+}
 
 class Select extends React.Component {
 	constructor(props) {
