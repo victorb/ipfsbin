@@ -2,20 +2,8 @@
 
 ## Example
 
-http://ipfsbin.xyz/#Qmb3yiXHZaTN89cxC8pSs32kkaHiHpEWtopmuYyoD4Pbme
+http://ipfsbin.xyz/#QmRRGse39ciuUvjp6NW7pToznZgNixtnZJjt2B6NHkdutW
 
-### Install
+### Install & Run
 
-run `npm install`
-
-### Run
-
-#### Dev
-
-run `node bin/server.js`
-
-run `npm dev:no-debug`
-
-#### Prod
-
-docker run -d -p 3000:3000 victorbjelkholm/ipfsbin
+Clone repository, run `npm install`, then `npm run compile`, serve the folder and open up in your browser. You'll need a local daemon running for development.
