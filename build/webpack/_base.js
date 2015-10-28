@@ -20,6 +20,12 @@ const webpackConfig = {
   },
   plugins : [
     new webpack.DefinePlugin(config.get('globals')),
+		new webpack.DefinePlugin({
+			'process.env': Object.keys(process.env).reduce(function(o, k) {
+				o[k] = JSON.stringify(process.env[k]);
+				return o;
+			}, {})
+		}),
     new webpack.optimize.OccurrenceOrderPlugin(),
     new webpack.optimize.DedupePlugin(),
     new HtmlWebpackPlugin({
@@ -35,11 +41,11 @@ const webpackConfig = {
   },
   module : {
     preLoaders : [
-      {
-        test : /\.(js|jsx)$/,
-        loaders : ['eslint-loader'],
-        exclude : /node_modules/
-      }
+      //{
+      //  test : /\.(js|jsx)$/,
+      //  loaders : ['eslint-loader'],
+      //  exclude : /node_modules/
+      //}
     ],
     loaders : [
 		{ test: /\.css$/, loader: "style-loader!css-loader" },
@@ -81,9 +87,9 @@ const webpackConfig = {
       { test: /\.svg(\?.*)?$/,      loader: "url-loader?prefix=fonts/&name=[path][name].[ext]&limit=10000&mimetype=image/svg+xml" }
     ]
   },
-  eslint : {
-    configFile : paths.project('.eslintrc')
-  }
+  //eslint : {
+  //  configFile : paths.project('.eslintrc')
+  //}
 };
 
 // NOTE: this is a temporary workaround. I don't know how to get Karma

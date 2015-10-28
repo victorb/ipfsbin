@@ -1,6 +1,5 @@
 import { applyMiddleware, compose, createStore } from 'redux';
 import rootReducer  from '../reducers';
-import { devTools } from 'redux-devtools';
 import thunk        from 'redux-thunk';
 
 export default function configureStore (initialState, debug = false) {
@@ -8,11 +7,7 @@ export default function configureStore (initialState, debug = false) {
 
   const middleware = applyMiddleware(thunk);
 
-  if (debug) {
-    createStoreWithMiddleware = compose(middleware, devTools());
-  } else {
-    createStoreWithMiddleware = compose(middleware);
-  }
+	createStoreWithMiddleware = compose(middleware);
 
   const store = createStoreWithMiddleware(createStore)(
     rootReducer, initialState

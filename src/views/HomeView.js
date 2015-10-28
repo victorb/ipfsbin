@@ -1,10 +1,11 @@
 import React                  from 'react';
 import { bindActionCreators } from 'redux';
 import { connect }            from 'react-redux';
+import _ from 'lodash'
 
 import Codemirror from 'react-codemirror'
 
-require('css!codemirror/lib/codemirror.css');
+//require('css!codemirror/lib/codemirror.css');
 //require('codemirror/mode/javascript/javascript.js');
 
 import modes from '../utils/modes'
@@ -54,10 +55,14 @@ class Select extends React.Component {
 		let count = 0;
 		const options = modes.map((mode) => {
 			count++
-			return <option key={count} value={mode.mode}>{mode.name}</option>
+			return <option key={count} value={mode.name}>{mode.name}</option>
 		})
 		const mode = this.state.mode || this.props.mode
-		return <div id="select"><select onChange={this.handleChange.bind(this) } value={mode}>{options}</select></div>
+		return <div id="select">
+			<select onChange={this.handleChange.bind(this) } value={mode}>
+			{options}
+			</select>
+		</div>
 	}
 }
 
@@ -71,7 +76,9 @@ export class HomeView extends React.Component {
     super();
 		this.state = {
 			text: '',
-			mode: 'javascript'
+			last_saved_text: '',
+			mode: 'JavaScript',
+			last_saved_mode: 'JavaScript'
 		}
 		if(window.location.hash !== '') {
 			this.state.hash = window.location.hash.substr(1, window.location.hash.length)
@@ -98,7 +105,10 @@ export class HomeView extends React.Component {
 			return res.json()
 		}).then((json) => {
 			window.location.hash = json.hash
-			this.setState({last_saved_text: this.state.text})
+			this.setState({
+				last_saved_text: this.state.text,
+				last_saved_mode: this.state.mode
+			})
 		})
 	}
 
@@ -111,7 +121,12 @@ export class HomeView extends React.Component {
 				}
 				return res.json()
 			}).then((res) => {
-				this.setState({text: res.text, last_saved_text: res.text, mode: res.mode})
+				this.setState({
+					text: res.text,
+					last_saved_text: res.text,
+					mode: res.mode,
+					last_saved_mode: res.mode
+				})
 			}).catch((error) => {
 				console.log(error)
 			})
@@ -135,26 +150,24 @@ export class HomeView extends React.Component {
   render () {
 		let button_classname = ""
 		let disabled = false
-		if(this.state.last_saved_text === this.state.text) {
+		if(
+				this.state.last_saved_text === this.state.text &&
+				this.state.last_saved_mode === this.state.mode
+				) {
 			button_classname = "disabled"
 			disabled = true
+		}
+	  let found_mode = _.findWhere(modes, {name: this.state.mode})
+		if(found_mode !== undefined) {
+			found_mode = found_mode.mode
+		} else {
+			found_mode = "null"
 		}
 		const options = {
 			lineNumbers: true,
 			theme: 'base16-dark',
-			mode: this.state.mode
+			mode: found_mode
 		}
-				//<AceEditor
-				//	style={editorStyle}
-				//	mode="javascript"
-				//	theme="monokai"
-				//	name="editor"
-				//	height="6em"
-				//	onChange={this.onChange.bind(this)}
-				//	value={this.state.text}
-				//	ref='editor'
-				//	editorProps={{}}javascript
-				///>
     return (
       <div>
 				<Codemirror value={this.state.text} onChange={this.onChange.bind(this)} options={options}/>
