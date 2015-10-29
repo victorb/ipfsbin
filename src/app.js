@@ -119,25 +119,6 @@ class App extends React.Component {
         last_saved_mode: this.state.mode
       })
     })
-		//fetch(api_endpoint + '/paste', {
-		//	method: 'POST',
-		//	headers: {
-		//		'Accept': 'application/json',
-		//		'Content-Type': 'application/json'
-		//	},
-		//	body: JSON.stringify({text: this.state.text, mode: this.state.mode}),
-		//}).then((res) => {
-		//	if(res.status !== 201 && res.status !== 200) {
-		//		alert('Something went wrong with creating your paste')
-		//	}
-		//	return res.json()
-		//}).then((json) => {
-		//	window.location.hash = json.hash
-		//	this.setState({
-		//		last_saved_text: this.state.text,
-		//		last_saved_mode: this.state.mode
-		//	})
-		//})
 	}
 
 	fetchAndSetText(hash) {

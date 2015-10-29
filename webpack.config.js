@@ -27,7 +27,6 @@ var config = {
 	}
 }
 if(process.env.DEV) {
-  console.log('HotModuleReplacementPlugin activated!')
   config.plugins = [
     new webpack.HotModuleReplacementPlugin()
   ]
@@ -35,7 +34,6 @@ if(process.env.DEV) {
   config.entry.push('webpack/hot/only-dev-server')
   config.devtool = 'eval'
 } else {
-  console.log('We are IN PRODUCTION! Minify and stuff')
   config.plugins = [
     new webpack.DefinePlugin({
       "process.env": {
