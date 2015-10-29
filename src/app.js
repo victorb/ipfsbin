@@ -5,8 +5,6 @@ var ipfsApi = require('ipfs-api')
 
 var ipfs = ipfsApi(window.location.hostname, '5001')
 
-window.ipfs = ipfs
-
 function ifError(err) {
   if(err) {
     alert("Error making a connection to the daemon! Check the console for more information")
@@ -33,6 +31,32 @@ modes.map((mode) => {
 
 if(window.location.hash === '') {
   window.location.hash = 'QmZUKqaJMk9VkxdVBDyymNFB9qWhxHwpXRe3ce4PnQ8yXK'
+}
+
+class LocalModeToggle extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      local_mode: false
+    }
+  }
+  handleOnChange(ev) {
+    this.setState({
+      local_mode: ev.target.value
+    })
+    if(ev.target.value) {
+      ipfs = ipfsApi('localhost', '5001')
+    } else {
+      ipfs = ipfsApi(window.location.hostname, '5001')
+    }
+  }
+  render() {
+    return <div id="local-mode">
+      <input id="local-mode-checkbox" type="checkbox" defaultValue={this.state.local_mode} onChange={this.handleOnChange.bind(this)}></input>
+      &nbsp;
+      <label htmlFor="local-mode-checkbox">Use local IPFS daemon</label>
+    </div>
+  }
 }
 
 class Select extends React.Component {
@@ -173,6 +197,7 @@ class App extends React.Component {
 				<Codemirror value={this.state.text} onChange={this.onChange.bind(this)} options={options} ref="editor"/>
 				<button id="save-button" disabled={disabled} className={button_classname} onClick={this.onSave.bind(this)}>Save</button>
 				<Select onChange={this.handleLanguageChange.bind(this)} mode={this.state.mode}/>
+        <LocalModeToggle/>
       </div>
     );
   }
