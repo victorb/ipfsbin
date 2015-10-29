@@ -30,7 +30,7 @@ modes.map((mode) => {
 
 
 if(window.location.hash === '') {
-  window.location.hash = 'QmZUKqaJMk9VkxdVBDyymNFB9qWhxHwpXRe3ce4PnQ8yXK'
+  window.location.hash = 'QmSS3dUE5oKdyDNvpGsYCXgm2mBW4fSDzC5B3NDf7DR8VR'
 }
 
 class LocalModeToggle extends React.Component {
