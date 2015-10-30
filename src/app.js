@@ -4,8 +4,6 @@ require('offline-plugin/runtime').install()
 
 var ipfsApi = require('ipfs-api')
 
-var ipfs = ipfsApi(window.location.hostname, '5001')
-
 function ifError(err) {
   if(err) {
     alert("Error making a connection to the daemon! Check the console for more information")
@@ -14,9 +12,6 @@ function ifError(err) {
   }
 }
 
-ipfs.id((err, id) => {
-  ifError(err)
-})
 
 import Codemirror from 'react-codemirror'
 
@@ -44,6 +39,10 @@ if(start_in_local) {
 } else {
   ipfs = ipfsApi(window.location.hostname, '5001')
 }
+
+ipfs.id((err, id) => {
+  ifError(err)
+})
 
 class LocalModeToggle extends React.Component {
   constructor(props) {
