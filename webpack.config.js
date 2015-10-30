@@ -1,5 +1,6 @@
 var path = require('path');
 var webpack = require('webpack');
+var OfflinePlugin = require('offline-plugin');
 
 var config = {
   entry: [
@@ -21,14 +22,33 @@ var config = {
         test: /\.json$/, loader: "json-loader"
       }
     ]
-  },
+    },
 	node: {
 		fs: 'empty'
 	}
 }
+
+var offline_plugin = new OfflinePlugin({
+  version: () => {
+    if(process.env.DEV) {
+      return (new Date()).toString()
+    } else {
+      return 'v1'
+    }
+  },
+  ServiceWorker: false,
+  AppCache: {
+    directory: '/'
+  },
+  rewrites: (arg) => {
+    return 'dist/' + arg
+  }
+})
+
 if(process.env.DEV) {
   config.plugins = [
-    new webpack.HotModuleReplacementPlugin()
+    new webpack.HotModuleReplacementPlugin(),
+    offline_plugin
   ]
   config.entry.push('webpack-dev-server/client?http://localhost:3000')
   config.entry.push('webpack/hot/only-dev-server')
@@ -47,7 +67,8 @@ if(process.env.DEV) {
         'dead_code' : false,
         'warnings': false
       }
-    })
+    }),
+    offline_plugin
   ]
 }
 

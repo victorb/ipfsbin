@@ -1,5 +1,6 @@
 import React from 'react'
 import _findWhere from 'lodash/collection/findWhere'
+require('offline-plugin/runtime').install()
 
 var ipfsApi = require('ipfs-api')
 
