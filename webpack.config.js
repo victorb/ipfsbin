@@ -40,8 +40,16 @@ var offline_plugin = new OfflinePlugin({
   AppCache: {
     directory: '/'
   },
+  caches: {
+    main: ['bundle.js'],
+    additional: ['src/base16-dark.css', 'src/codemirror.css']
+  },
   rewrites: (arg) => {
-    return 'dist/' + arg
+    if(arg.indexOf('bundle') !== -1) {
+      return 'dist/' + arg
+    } else {
+      return arg
+    }
   }
 })
 

@@ -3,6 +3,8 @@ CACHE MANIFEST
 
 CACHE:
 /dist/bundle.js
+/src/base16-dark.css
+/src/codemirror.css
 
 NETWORK:
 *
