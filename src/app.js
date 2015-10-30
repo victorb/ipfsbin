@@ -33,11 +33,22 @@ if(window.location.hash === '') {
   window.location.hash = 'QmSS3dUE5oKdyDNvpGsYCXgm2mBW4fSDzC5B3NDf7DR8VR'
 }
 
+let start_in_local = false
+if(window.location.search === '?local') {
+  start_in_local = true
+}
+
+if(start_in_local) {
+  ipfs = ipfsApi('localhost', '5001')
+} else {
+  ipfs = ipfsApi(window.location.hostname, '5001')
+}
+
 class LocalModeToggle extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      local_mode: false
+      local_mode: start_in_local
     }
   }
   handleOnChange(ev) {
@@ -52,7 +63,7 @@ class LocalModeToggle extends React.Component {
   }
   render() {
     return <div id="local-mode">
-      <input id="local-mode-checkbox" type="checkbox" defaultValue={this.state.local_mode} onChange={this.handleOnChange.bind(this)}></input>
+      <input id="local-mode-checkbox" type="checkbox" checked={this.state.local_mode} onChange={this.handleOnChange.bind(this)}></input>
       &nbsp;
       <label htmlFor="local-mode-checkbox">Use local IPFS daemon</label>
     </div>
@@ -93,7 +104,8 @@ class App extends React.Component {
 			last_saved_text: '',
 			mode: 'JavaScript',
 			last_saved_mode: 'JavaScript',
-      local_mode: false
+      local_mode: false,
+      loading: false
 		}
 		if(window.location.hash !== '') {
 			this.state.hash = window.location.hash.substr(1, window.location.hash.length)
@@ -110,18 +122,21 @@ class App extends React.Component {
       text: this.state.text,
       mode: this.state.mode
     })
+    this.setState({loading: true})
 
     ipfs.add(new Buffer(body), (err, res) => {
       ifError(err)
       window.location.hash = res.Hash
       this.setState({
         last_saved_text: this.state.text,
-        last_saved_mode: this.state.mode
+        last_saved_mode: this.state.mode,
+        loading: false
       })
     })
 	}
 
 	fetchAndSetText(hash) {
+    this.setState({loading: true})
     ipfs.cat(hash, (err, content) => {
       ifError(err)
       const text = content.text
@@ -130,7 +145,8 @@ class App extends React.Component {
         text,
         mode,
         last_saved_text: text,
-        last_saved_mode: mode
+        last_saved_mode: mode,
+        loading: false
       })
     })
 	}
@@ -173,9 +189,14 @@ class App extends React.Component {
 			theme: 'base16-dark',
 			mode: found_mode
 		}
+    let loading = null
+    if(this.state.loading) {
+      loading = <div className="loading">Current loading paste...</div>
+    }
     return (
       <div>
 				<Codemirror value={this.state.text} onChange={this.onChange.bind(this)} options={options} ref="editor"/>
+        {loading}
 				<button id="save-button" disabled={disabled} className={button_classname} onClick={this.onSave.bind(this)}>Save</button>
 				<Select onChange={this.handleLanguageChange.bind(this)} mode={this.state.mode}/>
         <LocalModeToggle/>
