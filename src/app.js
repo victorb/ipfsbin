@@ -34,6 +34,7 @@ if(window.location.search === '?local') {
   start_in_local = true
 }
 
+var ipfs;
 if(start_in_local) {
   ipfs = ipfsApi('localhost', '5001')
 } else {
