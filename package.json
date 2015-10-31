@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "mocha --compilers js:babel-core/register",
+    "test:watch": "npm test -- --watch --growl",
     "compile": "webpack",
     "compile:dev": "DEV=true webpack",
     "dev": "DEV=true node server.js"
@@ -18,6 +19,7 @@
     "eslint-plugin-react": "^3.6.3",
     "ipfs-api": "^2.4.1",
     "json-loader": "^0.5.3",
+    "mocha": "^2.3.3",
     "offline-plugin": "^1.3.1",
     "react": "^0.14.1",
     "react-codemirror": "^0.2.0",
