@@ -8,19 +8,23 @@ class LocalModeToggle extends React.Component {
     }
   }
   handleOnClick(ev) {
+    const new_checked = !this.state.checked
     this.setState({
-      checked: !this.state.checked
+      checked: new_checked
     })
-    this.props.onChange(!this.state.checked)
+    console.log('Changed!')
+      console.log('returning')
+      console.log(new_checked)
+    this.props.onChange(new_checked)
   }
   render() {
-    return <div id="local-mode" onClick={this.handleOnClick.bind(this)}>
+    return <div id="local-mode">
       <input
         ref="checkbox"
         id="local-mode-checkbox"
-        onChange={() => {/* empty because we use state and don't want warning */}}
         type="checkbox"
         checked={this.state.checked}
+        onChange={this.handleOnClick.bind(this)}
       />
       &nbsp;
       <label htmlFor="local-mode-checkbox">Use local IPFS daemon</label>

@@ -138,7 +138,7 @@ class App extends React.Component {
         {loading}
 				<button id="save-button" disabled={disabled} className={button_classname} onClick={this.onSave.bind(this)}>Save</button>
 				<SelectLanguage onChange={this.handleLanguageChange.bind(this)} mode={this.state.mode}/>
-        <LocalModeToggle local={url.isLocalMode} onChange={() => {
+        <LocalModeToggle local={url.isLocalMode} onChange={(mode) => {
           url.toggleLocalMode()
         }}/>
       </div>

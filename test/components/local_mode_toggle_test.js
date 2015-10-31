@@ -33,22 +33,29 @@ describe('Component | <LocalModeToggle/>', () => {
   it('Calls callback', () => {
     var was_called = false
     var callback_value;
+
     var callback = (value) => {
+      console.log("CALLBACK CALLED")
       was_called = true
+      console.log(value)
       callback_value = value
     }
+
     local_mode_toggle = TestUtils.renderIntoDocument(
-      <LocalModeToggle onChange={callback}/>
+      <LocalModeToggle onChange={callback} local={false}/>
     );
+
     var el = TestUtils.findRenderedDOMComponentWithTag(
       local_mode_toggle,
-      'div'
+      'input'
     );
-    TestUtils.Simulate.click(el)
-    assert.equal(true, was_called)
-    assert.equal(true, callback_value)
 
-    TestUtils.Simulate.click(el)
-    assert.equal(false, callback_value)
+    TestUtils.Simulate.change(el)
+
+    assert.equal(true, was_called, 'was not called')
+    assert.equal(true, callback_value, 'didnt return true')
+
+    TestUtils.Simulate.change(el)
+    assert.equal(false, callback_value, 'didnt return false')
   })
 })
