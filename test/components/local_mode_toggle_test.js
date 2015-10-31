@@ -3,7 +3,7 @@ var LocalModeToggle = require('../../src/components/local_mode_toggle')
 var React = require('react')
 var TestUtils = require('react-addons-test-utils')
 
-describe('Component | <LocalModeToggle/>', () => {
+describe('<LocalModeToggle/>', () => {
   var local_mode_toggle;
   before(() => {
     local_mode_toggle = TestUtils.renderIntoDocument(
@@ -35,9 +35,7 @@ describe('Component | <LocalModeToggle/>', () => {
     var callback_value;
 
     var callback = (value) => {
-      console.log("CALLBACK CALLED")
       was_called = true
-      console.log(value)
       callback_value = value
     }
 

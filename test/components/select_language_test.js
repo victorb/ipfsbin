@@ -3,7 +3,7 @@ var SelectLanguage = require('../../src/components/select_language')
 var React = require('react')
 var TestUtils = require('react-addons-test-utils')
 
-describe('Component | <SelectLanguage/>', () => {
+describe('<SelectLanguage/>', () => {
   var select_language;
   before(() => {
     select_language = TestUtils.renderIntoDocument(

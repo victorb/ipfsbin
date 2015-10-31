@@ -12,9 +12,6 @@ class LocalModeToggle extends React.Component {
     this.setState({
       checked: new_checked
     })
-    console.log('Changed!')
-      console.log('returning')
-      console.log(new_checked)
     this.props.onChange(new_checked)
   }
   render() {
