@@ -80,7 +80,7 @@ class Select extends React.Component {
 		const mode = this.state.mode || this.props.mode
 		return <div id="select">
 			<select onChange={this.handleChange.bind(this) } value={mode}>
-			{options}
+        {options}
 			</select>
 		</div>
 	}
