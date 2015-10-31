@@ -17,8 +17,21 @@ describe('URL Service', function() {
   })
   it('knows if we want to start in local mode', () => {
     assert(!url.isLocalMode, 'was in local mode')
+
     url = new url_service({location: {search: '?local'}})
     assert(url.isLocalMode, 'was not in local mode')
+
+    url = new url_service({location: {search: ''}})
+    assert(!url.isLocalMode, 'was in local mode')
+
+    url = new url_service({location: {search: '?'}})
+    assert(!url.isLocalMode, 'was in local mode')
+
+    url = new url_service({location: {search: '?something'}})
+    assert(!url.isLocalMode, 'was in local mode')
+
+    url = new url_service({location: {search: null}})
+    assert(!url.isLocalMode, 'was in local mode')
   })
   it('defaults to showing a hash', () => {
     assert(url.hash.length !== 0, 'was 0 characters long')

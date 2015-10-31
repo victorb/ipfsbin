@@ -1,61 +1,76 @@
 var assert = require('assert')
-var LocalModeToggle = require('../../src/components/local_mode_toggle')
+var SelectLanguage = require('../../src/components/select_language')
 var React = require('react')
 var TestUtils = require('react-addons-test-utils')
 
-describe('Component | <LocalModeToggle/>', () => {
-  var local_mode_toggle;
+describe('Component | <SelectLanguage/>', () => {
+  var select_language;
   before(() => {
-    local_mode_toggle = TestUtils.renderIntoDocument(
-      <LocalModeToggle/>
+    select_language = TestUtils.renderIntoDocument(
+      <SelectLanguage/>
     );
   })
   it('Is defined', () => {
-    assert(local_mode_toggle !== undefined)
+    assert(select_language !== undefined)
   })
-  it('Defaults to off', () => {
-    var checkbox = TestUtils.findRenderedDOMComponentWithTag(
-      local_mode_toggle,
-      'input'
+  it('Default to plain text', () => {
+    var options = TestUtils.scryRenderedDOMComponentsWithTag(
+      select_language,
+      'option'
     );
-    assert.equal(false, checkbox.checked)
+    var selected_option;
+    options.forEach((option) => {
+      if(option.selected) {
+        selected_option = option
+      }
+    })
+    assert.equal(selected_option.value, 'Plain Text')
   })
-  it('Read props `local`', () => {
-    local_mode_toggle = TestUtils.renderIntoDocument(
-      <LocalModeToggle local={true}/>
+  it('Set default language', () => {
+    select_language = TestUtils.renderIntoDocument(
+      <SelectLanguage mode="Markdown"/>
+    )
+    var options = TestUtils.scryRenderedDOMComponentsWithTag(
+      select_language,
+      'option'
     );
-    var checkbox = TestUtils.findRenderedDOMComponentWithTag(
-      local_mode_toggle,
-      'input'
-    );
-    assert.equal(true, checkbox.checked)
+    var selected_option;
+    options.forEach((option) => {
+      if(option.selected) {
+        selected_option = option
+      }
+    })
+    assert.equal(selected_option.value, 'Markdown')
   })
-  it('Calls callback', () => {
-    var was_called = false
-    var callback_value;
-    var callback = (value) => {
-      was_called = true
-      callback_value = value
+  it('Change language', () => {
+    var selected_mode;
+    var change_language = (mode) => {
+      selected_mode = mode
     }
-    local_mode_toggle = TestUtils.renderIntoDocument(
-      <LocalModeToggle onChange={callback}/>
+    select_language = TestUtils.renderIntoDocument(
+      <SelectLanguage mode="Markdown" onChange={change_language}/>
+    )
+    var select_element = TestUtils.findRenderedDOMComponentWithTag(
+      select_language,
+      'select'
+    )
+    TestUtils.Simulate.change(select_element, {
+      target: {
+        value: 'Markdown'
+      }
+    })
+    var options = TestUtils.scryRenderedDOMComponentsWithTag(
+      select_language,
+      'option'
     );
-    var el = TestUtils.findRenderedDOMComponentWithTag(
-      local_mode_toggle,
-      'div'
-    );
-    TestUtils.Simulate.click(el)
-    assert.equal(true, was_called)
-    assert.equal(true, callback_value)
+    var selected_option;
+    options.forEach((option) => {
+      if(option.selected) {
+        selected_option = option
+      }
+    })
 
-    local_mode_toggle = TestUtils.renderIntoDocument(
-      <LocalModeToggle onChange={callback} local={true}/>
-    );
-    var el = TestUtils.findRenderedDOMComponentWithTag(
-      local_mode_toggle,
-      'div'
-    );
-    TestUtils.Simulate.click(el)
-    assert.equal(false, callback_value)
+    assert.equal(selected_option.value, 'Markdown')
+    assert.equal(selected_mode, 'Markdown')
   })
 })
