@@ -24,7 +24,7 @@ modes.map((mode) => {
 
 
 if(window.location.hash === '') {
-  window.location.hash = 'QmSS3dUE5oKdyDNvpGsYCXgm2mBW4fSDzC5B3NDf7DR8VR'
+  window.location.hash = 'Qmc2KLJkWLwEpsRvnMkVU5STyeGt4cCy5PY1FXJPDmrJgD'
 }
 
 let start_in_local = false
