@@ -1,72 +1,30 @@
 <!doctype html>
-<html lang="en" manifest="dist/manifest.appcache">
+<html lang="en" manifest="manifest.appcache">
 <head>
   <title>IPFSBIN</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="src/codemirror.css">
-  <link rel="stylesheet" href="src/base16-dark.css">
   <link rel="icon" href="favicon.png" type="image/png" />
-	<style>
-	body, html {
-		background-color: #151515;
-    padding: 0px;
-    margin: 0px;
-	}
+  <style>
+    body, html {
+      background-color: #151515;
+      padding: 0px;
+      margin: 0px;
+    }
 
-  .CodeMirror {
-    position: absolute;
-    width: 100% !important;
-    height: 100% !important;
-  }
+    #source {
+      position: fixed;
+      z-index: 1000000;
+      bottom: 20px;
+      right: 30px;
+    }
 
-  #save-button {
-    z-index: 1000000;
-    position: fixed;
-    right: 30px;
-    width: 70px;
-    text-align: center;
-    top: 20px;
-    font-size: 17px;
-    line-height: 17px;
-  }
-
-  #save-button.disabled {
-    opacity: 0.5
-  }
-
-  #select {
-    z-index: 1000000;
-    position: fixed;
-    right: 110px;
-    top: 20px;
-    font-size: 17px;
-    height: 17px;
-    line-height: 17px;
-  }
-
-  #local-mode {
-    z-index: 1000000;
-    position: fixed;
-    right: 30px;
-    top: 45px;
-    color: white;
-  }
-
-  #source {
-    position: fixed;
-    z-index: 1000000;
-    bottom: 20px;
-    right: 30px;
-  }
-
-  #source a {
-    color: #bdc3c7;
-    text-decoration: none;
-    font-size: 15px;
-  }
-
-	</style>
+    #source a {
+      color: #bdc3c7;
+      text-decoration: none;
+      font-size: 15px;
+    }
+  </style>
 </head>
 <body>
   <div id="root">
@@ -77,7 +35,5 @@
   <div id="source">
     <a href="https://github.com/victorbjelkholm/ipfsbin" target="_blank">Source</a>
   </div>
-  <script src="dist/bundle.js"></script>
 </body>
 </html>
-

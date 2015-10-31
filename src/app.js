@@ -1,3 +1,7 @@
+require('./style.css')
+require('./codemirror.css')
+require('./base16-dark.css')
+
 import React from 'react'
 
 import Codemirror from 'react-codemirror'
