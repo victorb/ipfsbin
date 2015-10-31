@@ -1,5 +1,7 @@
 ## IPFSBIN
 
+[![Circle CI](https://circleci.com/gh/VictorBjelkholm/ipfsbin/tree/master.svg?style=svg&circle-token=87c22a7250029b5eb4d50f6191b762a9880603e8)](https://circleci.com/gh/VictorBjelkholm/ipfsbin/tree/master)
+
 ![IPFSBin Screenshot](screenshot.png)
 
 IPFSBIN is a pastebin application for sharing code and text documents to other people. It supports 81 languages and works even if you don't have access to the internet anymore.
