@@ -5,3 +5,8 @@ dependencies:
   override:
     - npm install -g npm@3.3.9
     - npm install
+deployment:
+  production:
+    branch: master
+    commands:
+      - npm run compile
