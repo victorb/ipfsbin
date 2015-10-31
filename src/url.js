@@ -4,7 +4,20 @@ var url = class URL {
   constructor(_window) {
     this._window = _window
     this.isLocalMode = this._localIsSet()
-    this.setHash(default_hash)
+    if(this._window.location.hash === undefined) {
+      this.setHash(default_hash)
+    } else {
+      if(this._window.location.hash.length === 0) {
+        this.setHash(default_hash)
+      } else {
+        this.setHash(
+          this._window.location.hash.substr(
+            1,
+            this._window.location.hash.length
+          )
+        )
+      }
+    }
   }
   setHash(new_hash) {
     this.hash = new_hash
