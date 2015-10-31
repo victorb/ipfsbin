@@ -3,12 +3,17 @@ var webpack = require('webpack');
 var OfflinePlugin = require('offline-plugin');
 var HtmlWebpackPlugin = require('html-webpack-plugin')
 
+var output_path = path.join(__dirname, 'dist');
+if(process.env.CIRCLE_ARTIFACTS) {
+  output_path = process.env.CIRCLE_ARTIFACTS
+}
+
 var config = {
   entry: [
     './src/index'
   ],
   output: {
-    path: path.join(__dirname, 'dist'),
+    path: output_path,
     filename: 'bundle.js'
   },
   module: {
