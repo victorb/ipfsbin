@@ -87,7 +87,7 @@ if(!process.env.DEV) {
 }
 
 config.plugins.push(new HtmlWebpackPlugin({
-  hash: true,
+  hash: !!process.env.DEV,
   template: 'index.html',
   favicon: 'favicon.png',
   minify: minify_options
