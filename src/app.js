@@ -1,8 +1,13 @@
 import React from 'react'
 import _findWhere from 'lodash/collection/findWhere'
+import Codemirror from 'react-codemirror'
+import modes_service from './modes'
+import api_service from './api'
+
 require('offline-plugin/runtime').install()
 
-var ipfsApi = require('ipfs-api')
+var modes = new modes_service()
+
 
 function ifError(err) {
   if(err) {
@@ -10,38 +15,25 @@ function ifError(err) {
   }
 }
 
+modes.require_all_modes()
 
-import Codemirror from 'react-codemirror'
-
-import modes from './modes'
-
-modes.map((mode) => {
-	const name = mode.mode
-	if(name !== "null") {
-		require('codemirror/mode/'+name+'/'+name+'.js');
-	}
-})
-
-
+// Tested
 if(window.location.hash === '') {
   window.location.hash = 'Qmc2KLJkWLwEpsRvnMkVU5STyeGt4cCy5PY1FXJPDmrJgD'
 }
 
+// Tested
 let start_in_local = false
 if(window.location.search === '?local') {
   start_in_local = true
 }
 
-var ipfs;
+var api;
 if(start_in_local) {
-  ipfs = ipfsApi('localhost', '5001')
+  api = new api_service('localhost')
 } else {
-  ipfs = ipfsApi(window.location.hostname, '5001')
+  api = new api_service(window.location.hostname)
 }
-
-ipfs.id((err, id) => {
-  ifError(err)
-})
 
 class LocalModeToggle extends React.Component {
   handleOnClick(ev) {
@@ -59,6 +51,8 @@ class LocalModeToggle extends React.Component {
     </div>
   }
 }
+
+// Tested
 
 class Select extends React.Component {
 	constructor(props) {
@@ -108,15 +102,14 @@ class App extends React.Component {
 	}
 
 	onSave() {
-    const body = JSON.stringify({
+    const body = {
       text: this.state.text,
       mode: this.state.mode
-    })
+    }
     this.setState({loading: true})
 
-    ipfs.add(new Buffer(body), (err, res) => {
-      ifError(err)
-      window.location.hash = res.Hash
+    api.add(body).then((hash) => {
+      window.location.hash = hash
       this.setState({
         last_saved_text: this.state.text,
         last_saved_mode: this.state.mode,
@@ -127,8 +120,7 @@ class App extends React.Component {
 
 	fetchAndSetText(hash) {
     this.setState({loading: true})
-    ipfs.cat(hash, (err, content) => {
-      ifError(err)
+    api.cat(hash).then((content) => {
       const text = content.text
       const mode = content.mode
       this.setState({

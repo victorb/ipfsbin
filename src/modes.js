@@ -85,6 +85,14 @@ const modes = [
 ]
 
 class Modes {
+  require_all_modes() {
+    modes.map((mode) => {
+      const name = mode.mode
+      if(name !== "null") {
+        require('codemirror/mode/'+name+'/'+name+'.js');
+      }
+    })
+  }
   find(name) {
 	  let found_mode = _findWhere(modes, {name})
     return found_mode

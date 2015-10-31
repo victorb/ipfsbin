@@ -1,12 +1,11 @@
 var ipfsApi = require('ipfs-api')
 
 var api = class API {
-  constructor(addr, _window) {
-    this.addr = addr
-    this._window = _window
+  constructor(hostname) {
+    this.hostname = hostname
     this.is_remote = true
     this.is_local = false
-    this.ipfs = ipfsApi(this.addr)
+    this.ipfs = ipfsApi(this.hostname, '5001')
   }
   isAlive() {
     return new Promise((resolve) => {
@@ -35,7 +34,13 @@ var api = class API {
     return new Promise((resolve) => {
       this.ipfs.cat(hash, (err, res) => {
         if(err) throw err
-        resolve(res)
+        var chunks = []
+        res.on('data',function(chunk){
+          chunks.push(chunk)
+        });
+        res.on('end',function(){
+          resolve(JSON.parse(chunks.join('')));
+        });
       })
     })
   }
