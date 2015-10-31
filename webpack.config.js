@@ -33,7 +33,7 @@ var offline_plugin = new OfflinePlugin({
     if(process.env.DEV) {
       return (new Date()).toString()
     } else {
-      return 'v3'
+      return 'v4'
     }
   },
   ServiceWorker: false,
