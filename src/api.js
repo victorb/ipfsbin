@@ -34,13 +34,17 @@ var api = class API {
     return new Promise((resolve) => {
       this.ipfs.cat(hash, (err, res) => {
         if(err) throw err
-        var chunks = []
-        res.on('data',function(chunk){
-          chunks.push(chunk)
-        });
-        res.on('end',function(){
-          resolve(JSON.parse(chunks.join('')));
-        });
+        if(res.readable) {
+          var chunks = []
+          res.on('data',function(chunk){
+            chunks.push(chunk)
+          });
+          res.on('end',function(){
+            resolve(JSON.parse(chunks.join('')));
+          });
+        } else {
+          resolve(res)
+        }
       })
     })
   }
