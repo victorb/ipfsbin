@@ -38,7 +38,7 @@ var offline_plugin = new OfflinePlugin({
     if(process.env.DEV) {
       return (new Date()).toString()
     } else {
-      return 'v1.0.2'
+      return 'v1.0.3'
     }
   },
   ServiceWorker: false,
