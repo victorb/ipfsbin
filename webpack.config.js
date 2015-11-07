@@ -38,7 +38,8 @@ var offline_plugin = new OfflinePlugin({
     if(process.env.DEV) {
       return (new Date()).toString()
     } else {
-      return 'v1.0.3'
+      // TODO read from package.json
+      return 'v1.0.4'
     }
   },
   ServiceWorker: false,
@@ -100,4 +101,3 @@ config.plugins.push(new HtmlWebpackPlugin({
 config.plugins.push(offline_plugin)
 
 module.exports = config
-
