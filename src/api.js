@@ -25,7 +25,7 @@ var api = class API {
     return new Promise((resolve) => {
       this.ipfs.add(new Buffer(json), (err, res) => {
         if(err) throw err
-        const hash = res[0].Hash
+        const hash = res.Hash
         resolve(hash)
       })
     })
