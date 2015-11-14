@@ -24,7 +24,7 @@
     "eslint-plugin-react": "^3.6.3",
     "html-webpack-plugin": "^2.0.4",
     "ipfs-api": "^2.4.1",
-    "ipfsd-ctl": "^0.5.6",
+    "ipfsd-ctl": "^0.6.2",
     "jsdom": "^7.0.2",
     "json-loader": "^0.5.3",
     "lodash": "^3.10.1",
