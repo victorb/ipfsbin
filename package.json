@@ -22,7 +22,7 @@
     "babel-loader": "^5.1.2",
     "css-loader": "^0.21.0",
     "eslint-plugin-react": "^3.6.3",
-    "html-webpack-plugin": "^2.0.4",
+    "html-webpack-plugin": "^2.7.1",
     "ipfs-api": "^2.4.1",
     "ipfsd-ctl": "^0.5.6",
     "jsdom": "^7.0.2",
