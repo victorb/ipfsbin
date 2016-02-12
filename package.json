@@ -25,7 +25,7 @@
     "html-webpack-plugin": "^2.0.4",
     "ipfs-api": "^2.4.1",
     "ipfsd-ctl": "^0.5.6",
-    "jsdom": "^7.0.2",
+    "jsdom": "^8.0.0",
     "json-loader": "^0.5.3",
     "lodash": "^3.10.1",
     "mocha": "^2.3.3",
