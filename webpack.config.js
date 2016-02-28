@@ -1,45 +1,17 @@
-var path = require('path');
-var webpack = require('webpack');
-var OfflinePlugin = require('offline-plugin');
+var webpack = require('webpack')
+var fs = require('fs')
+var OfflinePlugin = require('offline-plugin')
 var HtmlWebpackPlugin = require('html-webpack-plugin')
 
-var output_path = path.join(__dirname, 'dist');
-if(process.env.CIRCLE_ARTIFACTS) {
-  output_path = process.env.CIRCLE_ARTIFACTS
-}
-
-var config = {
-  entry: [
-    './src/index'
-  ],
-  output: {
-    path: output_path,
-    filename: 'bundle.js'
-  },
-  module: {
-    loaders: [
-      {
-        test: /\.js$/,
-        loaders: ['react-hot', 'babel'],
-        include: path.join(__dirname, 'src')
-      },
-      { test: /\.json$/, loader: "json-loader" },
-      { test: /\.css$/, loader: "style-loader!css-loader" },
-      { test: /\.png$/, loader: "url-loader?limit=100000" },
-    ]
-    },
-	node: {
-		fs: 'empty'
-	}
-}
+const env = process.env.NODE_ENV
+const production = env === 'prod'
 
 var offline_plugin = new OfflinePlugin({
   version: () => {
-    if(process.env.DEV) {
+    if (production) {
       return (new Date()).toString()
     } else {
-      // TODO read from package.json
-      return 'v1.0.4'
+      return JSON.parse(fs.readFileSync('./package.json').toString()).version
     }
   },
   ServiceWorker: false,
@@ -48,56 +20,51 @@ var offline_plugin = new OfflinePlugin({
   }
 })
 
-if(process.env.DEV) {
+var config = {
+  devtool: production ? 'source-map' : 'eval-source-maps',
+  entry: './index.js',
+  output: {
+    path: __dirname + '/dist',
+    filename: 'bundle.js'
+  },
+  module: {
+    loaders: [
+      {
+        test: /\.js$/,
+        loader: 'babel-loader',
+        exclude: /node_modules/
+      },
+      { test: /\.css$/, loader: 'style-loader!css-loader' },
+      { test: /\.png$/, loader: 'url-loader?limit=100000' }
+    ]
+  }
+}
+
+if (production) {
   config.plugins = [
-    new webpack.HotModuleReplacementPlugin()
-  ]
-  config.entry.push('webpack-dev-server/client?http://localhost:3000')
-  config.entry.push('webpack/hot/only-dev-server')
-  config.devtool = 'eval'
-} else {
-  config.plugins = [
-    new webpack.DefinePlugin({
-      "process.env": {
-        NODE_ENV: JSON.stringify("production")
+    new webpack.optimize.UglifyJsPlugin({
+      mangle: true,
+      compress: {
+        sequences: true,
+        dead_code: true,
+        conditionals: true,
+        booleans: true,
+        unused: true,
+        if_return: true,
+        join_vars: true,
+        drop_console: true
       }
     }),
-    new webpack.optimize.UglifyJsPlugin({
-      compress : {
-        // TODO removes all the modes from codemirror (facepalm)
-        'unused'    : false,
-        'dead_code' : false,
-        'warnings': false
-      }
+    new webpack.optimize.OccurenceOrderPlugin(),
+    new webpack.optimize.DedupePlugin(),
+    offline_plugin,
+    new HtmlWebpackPlugin({
+      hash: !!process.env.DEV,
+      template: 'index.html',
+      favicon: 'favicon.png'
     })
   ]
 }
 
-var minify_options = {}
-if(!process.env.DEV) {
-  minify_options = {
-    removeComments: true,
-    collapseWhitespace: true,
-    collapseBooleanAttributes: true,
-    removeAttributeQuotes: true,
-    removeRedundantAttributes: true,
-    removeEmptyAttributes: true,
-    removeScriptTypeAttributes: true,
-    removeStyleLinkTypeAttributes: true,
-    removeOptionalTags: true,
-    removeIgnored: true,
-    removeEmptyElements: true,
-    minifyCSS: true,
-    minifyURLs: true
-  }
-}
-
-config.plugins.push(new HtmlWebpackPlugin({
-  hash: !!process.env.DEV,
-  template: 'index.html',
-  favicon: 'favicon.png',
-  minify: minify_options
-}))
-config.plugins.push(offline_plugin)
-
 module.exports = config
+

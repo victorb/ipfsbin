@@ -6,39 +6,10 @@ body, html {
 
 .CodeMirror {
   position: absolute;
-  width: 100% !important;
-  height: 100% !important;
+  top: 30px;
+  height: calc(100vh - 30px) !important;
 }
 
-#save-button {
-  z-index: 1000000;
-  position: fixed;
-  right: 30px;
-  width: 70px;
-  text-align: center;
-  top: 20px;
-  font-size: 17px;
-  line-height: 17px;
-}
-
-#save-button.disabled {
-  opacity: 0.5
-}
-
-#select {
-  z-index: 1000000;
-  position: fixed;
-  right: 110px;
-  top: 20px;
-  font-size: 17px;
-  height: 17px;
-  line-height: 17px;
-}
-
-#local-mode {
-  z-index: 1000000;
-  position: fixed;
-  right: 30px;
-  top: 45px;
-  color: white;
+.clear {
+  clear: both;
 }

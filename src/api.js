@@ -1,47 +1,36 @@
-var ipfsApi = require('ipfs-api')
+require('script!./../node_modules/ipfs-api/dist/ipfsapi.js')
 
-var api = class API {
-  constructor(hostname) {
+class API {
+  constructor (hostname) {
     this.hostname = hostname
-    this.is_remote = true
-    this.is_local = false
-    this.ipfs = ipfsApi(this.hostname, '5001')
+    this.ipfs = window.ipfsAPI(this.hostname, '5001')
   }
-  isAlive() {
-    return new Promise((resolve) => {
-      resolve(true)
-    })
-  }
-  switchToRemote() {
-    this.is_remote = true
-    this.is_local = false
-  }
-  switchToLocal() {
-    this.is_remote = false
-    this.is_local = true
-  }
-  add(data) {
+  add (data) {
     const json = JSON.stringify(data)
     return new Promise((resolve) => {
       this.ipfs.add(new Buffer(json), (err, res) => {
-        if(err) throw err
-        const hash = res.Hash
-        resolve(hash)
+        if (err) throw err
+        // TODO works for both 0.3 and 0.4, refactor once moved to 0.4
+        if (res[0] === undefined) {
+          resolve(res.Hash) // 0.4
+        } else {
+          resolve(res[0].Hash) // 0.3
+        }
       })
     })
   }
-  cat(hash) {
+  cat (hash) {
     return new Promise((resolve) => {
       this.ipfs.cat(hash, (err, res) => {
-        if(err) throw err
-        if(res.readable) {
+        if (err) throw err
+        if (res.readable) {
           var chunks = []
-          res.on('data',function(chunk){
+          res.on('data', function (chunk) {
             chunks.push(chunk)
-          });
-          res.on('end',function(){
-            resolve(JSON.parse(chunks.join('')));
-          });
+          })
+          res.on('end', function () {
+            resolve(JSON.parse(chunks.join('')))
+          })
         } else {
           resolve(res)
         }
@@ -50,4 +39,4 @@ var api = class API {
   }
 }
 
-export default api
+export default API

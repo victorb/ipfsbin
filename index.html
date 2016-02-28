@@ -1,39 +1,36 @@
-<!doctype html>
-<html lang="en" manifest="manifest.appcache">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <title>IPFSBIN</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="icon" href="favicon.png" type="image/png" />
+  <meta charset="UTF-8">
+  <title>IPFSBin</title>
+  <link href='https://fonts.googleapis.com/css?family=Roboto+Mono:400,300,100,500' rel='stylesheet' type='text/css'>
   <style>
     body, html {
-      background-color: #151515;
       padding: 0px;
       margin: 0px;
+      background-color: #151515;
     }
 
-    #source {
-      position: fixed;
-      z-index: 1000000;
-      bottom: 20px;
-      right: 30px;
-    }
-
-    #source a {
-      color: #bdc3c7;
-      text-decoration: none;
-      font-size: 15px;
+    #loading {
+      position: absolute;
+      font-family: sans-serif;
+      top: 100px;
+      left: 50%;
+      margin-left: -150px;
+      text-align: center;
+      width: 300px;
+      height: 100px;
+      color: white;
     }
   </style>
 </head>
 <body>
   <div id="root">
-		<center>
-			<h1 style="color: #bdc3c7">Loading...</h1>
-		</center>
-	</div>
-  <div id="source">
-    <a href="https://github.com/victorbjelkholm/ipfsbin" target="_blank">Source</a>
+    <div style="background-color: #2c3e50; height: 30px;border-bottom: 1px solid #95a5a6;"></div>
+    <div id="loading">
+      L O A D I N G
+    </div>
   </div>
+  <script src="bundle.js"></script>
 </body>
 </html>

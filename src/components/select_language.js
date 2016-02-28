@@ -1,34 +1,28 @@
-var React = require('react')
-var modes_service = require('../modes')
-var modes = new modes_service()
+import React, { Component, PropTypes } from 'react'
+import Modes from '../modes'
+var modes = new Modes()
 
-class SelectLanguage extends React.Component {
-	constructor(props) {
-		super(props)
-		this.state = {
-			mode: null
-		}
-	}
-	handleChange(ev) {
-		this.props.onChange(ev.target.value)
-		this.setState({mode: ev.target.value})
-	}
-	render() {
-		let count = 0;
-		const options = modes.map((mode) => {
-			count++
-			return <option key={count} value={mode.name}>{mode.name}</option>
-		})
-		let mode = this.state.mode || this.props.mode
-    if(!mode) {
-      mode = 'Plain Text'
-    }
-		return <div id="select">
-			<select onChange={this.handleChange.bind(this) } value={mode}>
-        {options}
-			</select>
-		</div>
-	}
+class SelectLanguage extends Component {
+  handleChange (evt) {
+    evt.preventDefault()
+    this.props.onChange(evt.target.value)
+  }
+  render () {
+    let count = 0
+    const options = modes.map((mode) => {
+      count++
+      return <option key={count} value={mode.name}>
+        {mode.name}
+      </option>
+    })
+    return <select onChange={this.handleChange.bind(this)} value={this.props.mode || 'Plain Text'}>
+      {options}
+    </select>
+  }
+}
+SelectLanguage.propTypes = {
+  onChange: PropTypes.func.isRequired,
+  mode: PropTypes.string
 }
 
 export default SelectLanguage

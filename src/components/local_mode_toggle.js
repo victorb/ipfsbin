@@ -1,32 +1,27 @@
-var React = require('react')
+import React, { Component, PropTypes } from 'react'
 
-class LocalModeToggle extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      checked: this.props.local || false
-    }
+class LocalModeToggle extends Component {
+  handleOnClick (ev) {
+    this.props.onChange(ev.target.checked)
   }
-  handleOnClick(ev) {
-    const new_checked = !this.state.checked
-    this.setState({
-      checked: new_checked
-    })
-    this.props.onChange(new_checked)
-  }
-  render() {
-    return <div id="local-mode">
+  render () {
+    return <div>
       <input
-        ref="checkbox"
-        id="local-mode-checkbox"
-        type="checkbox"
-        checked={this.state.checked}
+        ref='checkbox'
+        id='local-mode-checkbox'
+        type='checkbox'
+        checked={this.props.local}
         onChange={this.handleOnClick.bind(this)}
       />
-      &nbsp;
-      <label htmlFor="local-mode-checkbox">Use local IPFS daemon</label>
+      <label htmlFor='local-mode-checkbox'>
+        Use local IPFS daemon
+      </label>
     </div>
   }
+}
+LocalModeToggle.propTypes = {
+  onChange: PropTypes.func.isRequired,
+  local: PropTypes.bool.isRequired
 }
 
 export default LocalModeToggle

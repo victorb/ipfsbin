@@ -2,148 +2,163 @@ require('./style.css')
 require('./codemirror.css')
 require('./base16-dark.css')
 
-import React from 'react'
+import React, { Component, PropTypes }from 'react'
+import { connect } from 'react-redux'
+import * as actions from './actions'
 
 import Codemirror from 'react-codemirror'
-import LocalModeToggle from './components/local_mode_toggle'
-import SelectLanguage from './components/select_language'
+import Header from './components/header'
 
-import modes_service from './modes'
-import api_service from './api'
-import url_service from './url'
+import ModesService from './modes'
+import APIService from './api'
 
 require('offline-plugin/runtime').install()
 
-var modes = new modes_service()
-var url = new url_service(window)
+// Welcome snippet, added and saved if no paste loaded
+const INTRODUCTION = `## Welcome to IPFSBin!
 
+** Basic usage**
 
-// TODO extract out into error component+service
-function ifError(err) {
-  if(err) {
-    console.error(err)
-  }
-}
+1. Remove all the content from this default paste
 
-modes.require_all_modes()
+2. Paste your content here
 
-var api;
-if(url.isLocalMode) {
-  api = new api_service('localhost')
-} else {
-  api = new api_service(window.location.hostname)
-}
+3. Click on save in the top menu
 
-class App extends React.Component {
-  constructor () {
-    super();
-		this.state = {
-			text: '',
-			last_saved_text: '',
-			mode: 'JavaScript',
-			last_saved_mode: 'JavaScript',
-      loading: false,
-      hash: url.hash
-		}
-  }
+4. Copy the URL from your addressbar
 
-	onChange(ev) {
-		this.setState({text: ev})
-		return ev
-	}
+5. Send to your friend
 
-	onSave() {
-    const body = {
-      text: this.state.text,
-      mode: this.state.mode
+6. Profit!!
+
+If you have any questions, open a issue here:
+https://github.com/VictorBjelkholm/ipfsbin/issues/new
+
+or feel free to contact the creator directly on Twitter here:
+https://twitter.com/VictorBjelkholm`
+
+var modes = new ModesService()
+
+class App extends Component {
+  componentDidMount () {
+    if (this.props.local) {
+      this.api = new APIService('localhost')
+    } else {
+      this.api = new APIService(window.location.hostname)
     }
-    this.setState({loading: true})
-
-    api.add(body).then((hash) => {
-      url.setHash(hash)
-      this.setState({
-        last_saved_text: this.state.text,
-        last_saved_mode: this.state.mode,
-        loading: false
+    const loadPaste = (hash) => {
+      this.props.dispatch(actions.Reset())
+      this.api.cat(hash).then((obj) => {
+        this.props.dispatch(actions.ChangeText(obj.text))
+        this.props.dispatch(actions.ChangeMode(obj.mode))
+        this.props.dispatch(actions.Saved(hash))
       })
-    })
-	}
+    }
+    const hashFromURL = () => {
+      return window.location.hash.substr(1, window.location.hash.length)
+    }
 
-	fetchAndSetText(hash) {
-    this.setState({loading: true})
-    api.cat(hash).then((content) => {
-      const text = content.text
-      const mode = content.mode
-      this.setState({
+    if (window.location.hash.includes('Qm')) {
+      loadPaste(hashFromURL())
+      this.refs.editor.codeMirror.focus()
+    } else {
+      this.onChange(INTRODUCTION)
+      this.onChangeMode('Markdown')
+      setTimeout(() => {
+        this.onSave()
+      }, 500)
+    }
+
+    window.onhashchange = () => {
+      if (hashFromURL() !== this.props.hash) {
+        loadPaste(hashFromURL())
+      }
+    }
+  }
+  componentDidUpdate (prevProps) {
+    if (this.props.local) {
+      this.api = new APIService('localhost')
+    } else {
+      this.api = new APIService(window.location.hostname)
+    }
+  }
+  handleOnChange (text) {
+    if (text !== this.props.text) {
+      this.props.dispatch(actions.ChangeText(text))
+    }
+  }
+  handleOnSave () {
+    if (!this.props.saved) {
+      this.props.dispatch(actions.Save())
+      const { text, mode } = this.props
+      const obj = {
         text,
-        mode,
-        last_saved_text: text,
-        last_saved_mode: mode,
-        loading: false
+        mode
+      }
+      this.api.add(obj).then((hash) => {
+        window.location.hash = hash
+        this.props.dispatch(actions.Saved(hash))
       })
-    })
-	}
-
-	componentDidMount() {
-		if(this.state.hash) {
-			this.fetchAndSetText(this.state.hash)
-		}
-
-    // TODO get rid of this
-		window.onhashchange = () => {
-			const hash = window.location.hash.substr(1, window.location.hash.length)
-      url.setHash(hash)
-			this.fetchAndSetText(hash)
-		}
-
-    this.refs.editor.codeMirror.focus()
-	}
-
-	handleLanguageChange(mode) {
-		this.setState({mode: mode})
-	}
-
-  render () {
-    // TODO extract out into SaveButton component
-		let button_classname = ""
-		let disabled = false
-		if(
-				this.state.last_saved_text === this.state.text &&
-				this.state.last_saved_mode === this.state.mode
-				) {
-			button_classname = "disabled"
-			disabled = true
-		}
-    // TODO should be inside SelectLanguage component
-	  let found_mode = modes.find(this.state.mode)
-		if(found_mode !== undefined) {
-			found_mode = found_mode.mode
-		} else {
-			found_mode = "null"
-		}
-    // TODO Extract out into Editor component
-		const options = {
-			lineNumbers: true,
-			theme: 'base16-dark',
-			mode: found_mode
-		}
-    // TODO extract out into loading
-    let loading = null
-    if(this.state.loading) {
-      loading = <div className="loading">Current loading paste...</div>
     }
-    return (
-      <div>
-				<Codemirror value={this.state.text} onChange={this.onChange.bind(this)} options={options} ref="editor"/>
-        {loading}
-				<button id="save-button" disabled={disabled} className={button_classname} onClick={this.onSave.bind(this)}>Save</button>
-				<SelectLanguage onChange={this.handleLanguageChange.bind(this)} mode={this.state.mode}/>
-        <LocalModeToggle local={url.isLocalMode} onChange={(mode) => {
-          url.toggleLocalMode()
-        }}/>
-      </div>
-    );
+  }
+  handleOnNew (evt) {
+    evt.preventDefault()
+    this.props.dispatch(actions.Reset())
+    window.history.replaceState({}, document.title, '/')
+  }
+  handleOnChangeMode (mode) {
+    this.props.dispatch(actions.ChangeMode(mode))
+  }
+  handleOnChangeLocal (is_local) {
+    window.localStorage.setItem('local', is_local)
+    this.props.dispatch(actions.ChangeLocal(is_local))
+  }
+  render () {
+    // TODO Extract editor component
+    let found_mode = modes.find(this.props.mode)
+    if (found_mode !== undefined) {
+      found_mode = found_mode.mode
+    } else {
+      found_mode = 'null'
+    }
+    const options = {
+      lineNumbers: true,
+      theme: 'base16-dark',
+      mode: found_mode
+    }
+    return <div>
+      <Header
+        mode={this.props.mode}
+        onChangeMode={this.handleOnChangeMode.bind(this)}
+        local={this.props.local}
+        onChangeLocal={this.handleOnChangeLocal.bind(this)}
+        saving={this.props.saving}
+        saved={this.props.saved}
+        onSave={this.onSave.bind(this)}
+        onNew={this.onNew.bind(this)}
+      />
+      <Codemirror
+        value={this.props.text}
+        onChange={this.handleOnChange.bind(this)}
+        options={options}
+        ref='editor' />
+    </div>
   }
 }
+App.propTypes = {
+  dispatch: PropTypes.func.isRequired,
+  mode: PropTypes.string.isRequired,
+  hash: PropTypes.string,
+  text: PropTypes.string.isRequired,
+  local: PropTypes.bool.isRequired,
+  saving: PropTypes.bool.isRequired,
+  saved: PropTypes.bool.isRequired
+}
 
-export default App
+const mapStateToProps = (state) => {
+  return state
+}
+
+export default connect(
+  mapStateToProps
+)(App)
