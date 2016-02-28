@@ -1,7 +1,12 @@
 machine:
-  node:
-    version: 5.4.1
+  services:
+    - docker
+
 dependencies:
   override:
-    - npm install -g npm@3.3.12
-    - npm install
+    - docker info
+    - docker build -t victorbjelkholm/ipfsbin .
+
+test:
+  override:
+    - docker run -it victorbjelkholm/ipfsbin npm test
