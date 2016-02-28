@@ -1,5 +1,6 @@
 var webpack = require('webpack')
 var fs = require('fs')
+var path = require('path')
 var OfflinePlugin = require('offline-plugin')
 var HtmlWebpackPlugin = require('html-webpack-plugin')
 
@@ -24,7 +25,7 @@ var config = {
   devtool: production ? 'source-map' : 'eval-source-maps',
   entry: './index.js',
   output: {
-    path: __dirname + '/dist',
+    path: path.join(__dirname, 'dist'),
     filename: 'bundle.js'
   },
   module: {
