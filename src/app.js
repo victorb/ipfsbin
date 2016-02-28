@@ -62,10 +62,10 @@ class App extends Component {
       loadPaste(hashFromURL())
       this.refs.editor.codeMirror.focus()
     } else {
-      this.onChange(INTRODUCTION)
-      this.onChangeMode('Markdown')
+      this.handleOnChange(INTRODUCTION)
+      this.handleOnChangeMode('Markdown')
       setTimeout(() => {
-        this.onSave()
+        this.handleOnSave()
       }, 500)
     }
 
@@ -134,8 +134,8 @@ class App extends Component {
         onChangeLocal={this.handleOnChangeLocal.bind(this)}
         saving={this.props.saving}
         saved={this.props.saved}
-        onSave={this.onSave.bind(this)}
-        onNew={this.onNew.bind(this)}
+        onSave={this.handleOnSave.bind(this)}
+        onNew={this.handleOnNew.bind(this)}
       />
       <Codemirror
         value={this.props.text}

@@ -37,6 +37,9 @@ export default class Header extends Component {
       }}>
         <a href='#'>{saveText}</a>
       </div>
+      <div className='header-item header-item-right'>
+        <a href='https://github.com/victorbjelkholm/ipfsbin' target='_blank'>Source Code</a>
+      </div>
       <div className='clear'></div>
     </div>
   }

@@ -24,6 +24,10 @@
   cursor: pointer;
 }
 
+.header-item-right {
+  float: right;
+}
+
 .header-title {
   font-weight: 500;
 }
