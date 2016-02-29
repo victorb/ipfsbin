@@ -1,5 +1,4 @@
 var webpack = require('webpack')
-var fs = require('fs')
 var path = require('path')
 var OfflinePlugin = require('offline-plugin')
 var HtmlWebpackPlugin = require('html-webpack-plugin')
@@ -9,11 +8,7 @@ const production = env === 'prod'
 
 var offline_plugin = new OfflinePlugin({
   version: () => {
-    if (production) {
-      return (new Date()).toString()
-    } else {
-      return JSON.parse(fs.readFileSync('./package.json').toString()).version
-    }
+    return process.env.VERSION
   },
   ServiceWorker: false,
   AppCache: {
