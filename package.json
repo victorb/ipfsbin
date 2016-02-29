@@ -11,7 +11,7 @@
     "ipfs:daemon": "./start-daemon.sh",
     "test": "./test.sh",
     "test:watch": "npm test -- --watch --growl",
-    "compile:prod": "NODE_ENV=prod webpack --progress",
+    "compile:prod": "NODE_ENV=prod webpack",
     "compile:dev": "NODE_ENV=dev webpack --progress",
     "dev": "./start-daemon.sh&NODE_ENV=dev node server.js",
     "prod": "./start-daemon.sh&NODE_ENV=prod node server.js"
