@@ -10,8 +10,7 @@ RUN npm install
 
 COPY . /usr/src/app
 
-ARG VERSION=dev
-ENV VERSION ${VERSION}
+ENV VERSION $CIRCLE_BUILD_NUM
 
 RUN npm run compile:prod
 
