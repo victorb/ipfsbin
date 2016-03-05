@@ -1,5 +1,18 @@
 require('script!./../node_modules/ipfs-api/dist/ipfsapi.js')
 
+const parseJSONorNonJSON = (to_parse) => {
+  var to_return = null
+  try {
+    to_return = JSON.parse(to_parse)
+  } catch (e) {
+    to_return = {
+      mode: null,
+      text: to_parse
+    }
+  }
+  return to_return
+}
+
 class API {
   constructor (hostname) {
     this.hostname = hostname
@@ -29,10 +42,10 @@ class API {
             chunks.push(chunk)
           })
           res.on('end', function () {
-            resolve(JSON.parse(chunks.join('')))
+            resolve(parseJSONorNonJSON(chunks.join('')))
           })
         } else {
-          resolve(res)
+          resolve(parseJSONorNonJSON(res.toString()))
         }
       })
     })
