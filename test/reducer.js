@@ -58,4 +58,12 @@ describe('Reducer', () => {
     state = reducer(state, actions.Reset())
     assert.strictEqual(state.text, '')
   })
+  it('Changing mode should allow save again', () => {
+    let state = reducer(undefined, {})
+    assert.strictEqual(state.mode, null)
+    assert.strictEqual(state.saved, true)
+    state = reducer(state, actions.ChangeMode('javascript'))
+    assert.strictEqual(state.mode, 'javascript')
+    assert.strictEqual(state.saved, false)
+  })
 })

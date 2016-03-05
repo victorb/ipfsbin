@@ -17,7 +17,8 @@ const action_map = {
   },
   CHANGE_MODE: (state, action) => {
     return Object.assign({}, state, {
-      mode: action.mode
+      mode: action.mode,
+      saved: false
     })
   },
   CHANGE_LOCAL: (state, action) => {
