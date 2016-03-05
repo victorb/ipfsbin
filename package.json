@@ -10,7 +10,7 @@
   "scripts": {
     "ipfs:daemon": "./start-daemon.sh",
     "test": "./test.sh",
-    "test:watch": "npm test -- --watch --growl",
+    "test:watch": "mocha --compilers js:babel-register --watch --growl",
     "compile:prod": "NODE_ENV=prod webpack",
     "compile:dev": "NODE_ENV=dev webpack --progress",
     "dev": "./start-daemon.sh&NODE_ENV=dev node server.js",
