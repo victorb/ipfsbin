@@ -19,9 +19,8 @@ class API {
     this.ipfs = window.ipfsAPI(this.hostname, '5001')
   }
   add (data) {
-    const json = JSON.stringify(data)
     return new Promise((resolve) => {
-      this.ipfs.add(new Buffer(json), (err, res) => {
+      this.ipfs.add(new Buffer(data), (err, res) => {
         if (err) throw err
         // TODO works for both 0.3 and 0.4, refactor once moved to 0.4
         if (res[0] === undefined) {

@@ -90,12 +90,17 @@ class App extends Component {
   handleOnSave () {
     if (!this.props.saved) {
       this.props.dispatch(actions.Save())
-      const { text, mode } = this.props
-      const obj = {
-        text,
-        mode
+      let to_save = null
+      if (this.props.mode === 'Plain Text' || this.props.mode === null) {
+        to_save = this.props.text
+      } else {
+        const { text, mode } = this.props
+        to_save = JSON.stringify({
+          text,
+          mode
+        })
       }
-      this.api.add(obj).then((hash) => {
+      this.api.add(to_save).then((hash) => {
         window.location.hash = hash
         this.props.dispatch(actions.Saved(hash))
       })
