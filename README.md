@@ -22,6 +22,13 @@ When you first load the application, we download and store everything in the bro
 
 6. Profit!!
 
+### Raw mode/Plain text
+
+If you want, you can work directly with plain text pastes instead of storing JSON objects.
+Try loading the IPFS security notes directly in IPFSBin: http://ipfsbin.xyz/#QmTumTjvcYCAvRRwQ8sDRxh8ezmrcr88YFU7iYNroGGTBZ
+
+If you want to save your own plain text pastes, simply select the "Plain Text" mode and hit save.
+
 ### Support
 
 If you have any questions, open a Github issue here:
