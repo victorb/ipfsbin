@@ -58,7 +58,7 @@ class App extends Component {
       return window.location.hash.substr(1, window.location.hash.length)
     }
 
-    if (window.location.hash.includes('Qm')) {
+    if (window.location.hash.indexOf('Qm') !== -1) {
       loadPaste(hashFromURL())
       this.refs.editor.codeMirror.focus()
     } else {
